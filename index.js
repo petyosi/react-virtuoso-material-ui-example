@@ -1,26 +1,14 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import Hello from './Hello';
-import './style.css';
+import { Virtuoso } from 'react-virtuoso'
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      name: 'React'
-    };
-  }
+const App = () => {
+return  <Virtuoso
+      style={{width: '200px', height: '400px'}}
+      totalCount={500}
+      item={index => <div>Item {index}</div>}
+    />
 
-  render() {
-    return (
-      <div>
-        <Hello name={this.state.name} />
-        <p>
-          Start editing to see some magic happen :)
-        </p>
-      </div>
-    );
-  }
 }
 
 render(<App />, document.getElementById('root'));
