@@ -11,7 +11,7 @@ import {useUserRecords} from './data';
 
 const ListContainer = ({listRef, style, children}) => {
   return (
-    <List ref={listRef} style={style}>
+    <List ref={listRef} style={{...style, padding: 0}}>
       {children}
     </List>
   );
@@ -25,24 +25,33 @@ const ItemContainer = ({children, ...props}) => {
   );
 };
 
+const TOTAL_COUNT = 500;
 const App = () => {
-  const users = useUserRecords(500);
+  const {loadedUsers, loadMore} = useUserRecords(TOTAL_COUNT);
 
   return (
     <Virtuoso
       ListContainer={ListContainer}
       ItemContainer={ItemContainer}
       style={{width: '400px', height: '400px'}}
-      totalCount={users.length}
+      totalCount={loadedUsers.length}
+      footer={() => {
+        return (
+          <div>
+            {loadedUsers.length === TOTAL_COUNT ? '-- end -- ' : ' loading...'}
+          </div>
+        );
+      }}
+      endReached={loadMore}
       item={index => {
         return (
           <>
             <ListItemAvatar>
-              <Avatar alt={`Avatar n°${index + 1}`} src={users[index].avatar} />
+              <Avatar alt="A" src={loadedUsers[index].avatar} />
             </ListItemAvatar>
             <ListItemText
-              primary={`${users[index].name}`}
-              secondary={<span>{users[index].description}</span>}
+              primary={`${loadedUsers[index].name}`}
+              secondary={<span>{loadedUsers[index].description}</span>}
             />
           </>
         );

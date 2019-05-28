@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useMemo, useState, useRef, useEffect} from 'react';
 import faker from 'faker';
 
 const getUser = () => {
@@ -32,5 +32,30 @@ export const useUserRecords = count => {
     [count],
   );
 
-  return allUsers;
+  const loadedCount = useRef(0);
+  const endReached = useRef(false);
+  const [loadedUsers, setLoadedUsers] = useState([]);
+
+  const loadMore = () => {
+    if (!endReached.current) {
+      setTimeout(() => {
+        loadedCount.current += 50;
+
+        if (loadedCount.current === 500) {
+          endReached.current = true;
+        }
+
+        // in a real world scenario, you would fetch the next
+        // slice and append it to the existing records
+        setLoadedUsers(allUsers.slice(0, loadedCount.current));
+      }, 500);
+    }
+  };
+
+  useEffect(loadMore, []);
+
+  return {
+    loadedUsers,
+    loadMore,
+  };
 };
